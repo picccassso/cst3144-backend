@@ -1,0 +1,72 @@
+[
+    {
+        "subject": "Math",
+        "location": "London",
+        "price": 100,
+        "spaces": 5,
+        "image": "math.jpg"
+    },
+    {
+        "subject": "English",
+        "location": "London",
+        "price": 100,
+        "spaces": 5,
+        "image": "english.jpg"
+    },
+    {
+        "subject": "Math",
+        "location": "Oxford",
+        "price": 100,
+        "spaces": 5,
+        "image": "math.jpg"
+    },
+    {
+        "subject": "English",
+        "location": "York",
+        "price": 80,
+        "spaces": 5,
+        "image": "english.jpg"
+    },
+    {
+        "subject": "Music",
+        "location": "Bristol",
+        "price": 90,
+        "spaces": 5,
+        "image": "music.jpg"
+    },
+    {
+        "subject": "Art",
+        "location": "London",
+        "price": 110,
+        "spaces": 5,
+        "image": "art.jpg"
+    },
+    {
+        "subject": "Science",
+        "location": "Manchester",
+        "price": 95,
+        "spaces": 5,
+        "image": "science.jpg"
+    },
+    {
+        "subject": "History",
+        "location": "Cambridge",
+        "price": 85,
+        "spaces": 5,
+        "image": "history.jpg"
+    },
+    {
+        "subject": "Geography",
+        "location": "Edinburgh",
+        "price": 90,
+        "spaces": 5,
+        "image": "geography.jpg"
+    },
+    {
+        "subject": "Sports",
+        "location": "Birmingham",
+        "price": 75,
+        "spaces": 5,
+        "image": "sports.jpg"
+    }
+]
