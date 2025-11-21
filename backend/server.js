@@ -99,6 +99,22 @@ app.get('/db-status', (req, res) => {
     });
 });
 
+// ==================== REST API ROUTES ====================
+
+// GET /lessons - Return all lessons as JSON
+app.get('/lessons', async (req, res) => {
+    try {
+        const lessons = await db.collection('lessons').find({}).toArray();
+        res.json(lessons);
+    } catch (err) {
+        console.error('Error fetching lessons:', err);
+        res.status(500).json({
+            error: 'Failed to fetch lessons',
+            message: err.message
+        });
+    }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
