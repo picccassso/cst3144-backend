@@ -1,0 +1,42 @@
+{
+    "info": {
+        "name": "After School Classes API",
+        "description": "REST API for After School Classes application - CST3144 Coursework",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/health",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["health"]
+                },
+                "description": "Check server and database status"
+            }
+        },
+        {
+            "name": "GET All Lessons",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/lessons",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["lessons"]
+                },
+                "description": "Returns all lessons from MongoDB as JSON array"
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}
