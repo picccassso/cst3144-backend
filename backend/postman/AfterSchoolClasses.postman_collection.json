@@ -30,6 +30,28 @@
                 },
                 "description": "Returns all lessons from MongoDB as JSON array"
             }
+        },
+        {
+            "name": "POST Create Order",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"phone\": \"07123456789\",\n    \"lessonIDs\": [\"lesson_id_1\", \"lesson_id_2\"],\n    \"spaces\": 2\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/orders",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["orders"]
+                },
+                "description": "Creates a new order in the orders collection. Required fields: name, phone, lessonIDs, spaces"
+            }
         }
     ],
     "variable": [

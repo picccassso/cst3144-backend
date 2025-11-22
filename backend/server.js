@@ -115,6 +115,93 @@ app.get('/lessons', async (req, res) => {
     }
 });
 
+// POST /orders - Save a new order to the orders collection
+app.post('/orders', async (req, res) => {
+    try {
+        const { name, phone, lessonIDs, spaces } = req.body;
+
+        // Validate required fields
+        if (!name || !phone || !lessonIDs || !spaces) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                message: 'Order must include: name, phone, lessonIDs, spaces'
+            });
+        }
+
+        // Create order object
+        const order = {
+            name: name,
+            phone: phone,
+            lessonIDs: lessonIDs,
+            spaces: spaces,
+            createdAt: new Date()
+        };
+
+        // Insert into orders collection
+        const result = await db.collection('orders').insertOne(order);
+
+        res.status(201).json({
+            message: 'Order created successfully',
+            orderId: result.insertedId,
+            order: order
+        });
+    } catch (err) {
+        console.error('Error creating order:', err);
+        res.status(500).json({
+            error: 'Failed to create order',
+            message: err.message
+        });
+    }
+});
+
+// PUT /lessons/:id - Update a lesson's spaces
+app.put('/lessons/:id', async (req, res) => {
+    try {
+        const lessonId = req.params.id;
+        const { spaces } = req.body;
+
+        // Validate ObjectId format
+        if (!ObjectId.isValid(lessonId)) {
+            return res.status(400).json({
+                error: 'Invalid lesson ID',
+                message: 'The provided lesson ID is not valid'
+            });
+        }
+
+        // Validate spaces
+        if (spaces === undefined || spaces < 0) {
+            return res.status(400).json({
+                error: 'Invalid spaces value',
+                message: 'Spaces must be a non-negative number'
+            });
+        }
+
+        // Update the lesson
+        const result = await db.collection('lessons').updateOne(
+            { _id: new ObjectId(lessonId) },
+            { $set: { spaces: spaces } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                error: 'Lesson not found',
+                message: 'No lesson found with the provided ID'
+            });
+        }
+
+        res.json({
+            message: 'Lesson updated successfully',
+            modifiedCount: result.modifiedCount
+        });
+    } catch (err) {
+        console.error('Error updating lesson:', err);
+        res.status(500).json({
+            error: 'Failed to update lesson',
+            message: err.message
+        });
+    }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
