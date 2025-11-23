@@ -52,12 +52,61 @@
                 },
                 "description": "Creates a new order in the orders collection. Required fields: name, phone, lessonIDs, spaces"
             }
+        },
+        {
+            "name": "PUT Update Lesson",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"spaces\": 3\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/lessons/{{lessonId}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["lessons", "{{lessonId}}"]
+                },
+                "description": "Updates any attribute of a lesson. Can update: subject, location, price, spaces, image. Replace {{lessonId}} with actual MongoDB ObjectId."
+            }
+        },
+        {
+            "name": "PUT Update Lesson - Multiple Fields",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"subject\": \"Advanced Math\",\n    \"price\": 120,\n    \"spaces\": 4\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/lessons/{{lessonId}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["lessons", "{{lessonId}}"]
+                },
+                "description": "Example of updating multiple attributes at once. Can update: subject, location, price, spaces, image."
+            }
         }
     ],
     "variable": [
         {
             "key": "baseUrl",
             "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "lessonId",
+            "value": "YOUR_LESSON_ID_HERE",
             "type": "string"
         }
     ]

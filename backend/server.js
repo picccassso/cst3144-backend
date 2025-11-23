@@ -154,11 +154,11 @@ app.post('/orders', async (req, res) => {
     }
 });
 
-// PUT /lessons/:id - Update a lesson's spaces
+// PUT /lessons/:id - Update any attribute of a lesson
 app.put('/lessons/:id', async (req, res) => {
     try {
         const lessonId = req.params.id;
-        const { spaces } = req.body;
+        const updateData = req.body;
 
         // Validate ObjectId format
         if (!ObjectId.isValid(lessonId)) {
@@ -168,18 +168,44 @@ app.put('/lessons/:id', async (req, res) => {
             });
         }
 
-        // Validate spaces
-        if (spaces === undefined || spaces < 0) {
+        // Check if there's data to update
+        if (!updateData || Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                error: 'No update data provided',
+                message: 'Request body must contain fields to update'
+            });
+        }
+
+        // Validate spaces if provided
+        if (updateData.spaces !== undefined && updateData.spaces < 0) {
             return res.status(400).json({
                 error: 'Invalid spaces value',
                 message: 'Spaces must be a non-negative number'
             });
         }
 
+        // Validate price if provided
+        if (updateData.price !== undefined && updateData.price < 0) {
+            return res.status(400).json({
+                error: 'Invalid price value',
+                message: 'Price must be a non-negative number'
+            });
+        }
+
+        // Build update object with only allowed fields
+        const allowedFields = ['subject', 'location', 'price', 'spaces', 'image'];
+        const updateFields = {};
+
+        for (const field of allowedFields) {
+            if (updateData[field] !== undefined) {
+                updateFields[field] = updateData[field];
+            }
+        }
+
         // Update the lesson
         const result = await db.collection('lessons').updateOne(
             { _id: new ObjectId(lessonId) },
-            { $set: { spaces: spaces } }
+            { $set: updateFields }
         );
 
         if (result.matchedCount === 0) {
@@ -189,9 +215,13 @@ app.put('/lessons/:id', async (req, res) => {
             });
         }
 
+        // Fetch and return updated lesson
+        const updatedLesson = await db.collection('lessons').findOne({ _id: new ObjectId(lessonId) });
+
         res.json({
             message: 'Lesson updated successfully',
-            modifiedCount: result.modifiedCount
+            modifiedCount: result.modifiedCount,
+            lesson: updatedLesson
         });
     } catch (err) {
         console.error('Error updating lesson:', err);
