@@ -115,6 +115,34 @@ app.get('/lessons', async (req, res) => {
     }
 });
 
+// GET /search - Search lessons by subject or location
+app.get('/search', async (req, res) => {
+    try {
+        const query = req.query.q || '';
+
+        if (!query.trim()) {
+            return res.json([]);
+        }
+
+        // Create case-insensitive search filter
+        const searchFilter = {
+            $or: [
+                { subject: { $regex: query, $options: 'i' } },
+                { location: { $regex: query, $options: 'i' } }
+            ]
+        };
+
+        const results = await db.collection('lessons').find(searchFilter).toArray();
+        res.json(results);
+    } catch (err) {
+        console.error('Error searching lessons:', err);
+        res.status(500).json({
+            error: 'Failed to search lessons',
+            message: err.message
+        });
+    }
+});
+
 // POST /orders - Save a new order to the orders collection
 app.post('/orders', async (req, res) => {
     try {
