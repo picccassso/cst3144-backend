@@ -115,6 +115,39 @@ app.get('/lessons', async (req, res) => {
     }
 });
 
+// GET /lessons/:id - Return a single lesson by ID
+app.get('/lessons/:id', async (req, res) => {
+    try {
+        const lessonId = req.params.id;
+
+        // Validate ObjectId format
+        if (!ObjectId.isValid(lessonId)) {
+            return res.status(400).json({
+                error: 'Invalid lesson ID',
+                message: 'The provided lesson ID is not valid'
+            });
+        }
+
+        // Find lesson by ID
+        const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(lessonId) });
+
+        if (!lesson) {
+            return res.status(404).json({
+                error: 'Lesson not found',
+                message: `No lesson found with ID: ${lessonId}`
+            });
+        }
+
+        res.json(lesson);
+    } catch (err) {
+        console.error('Error fetching lesson:', err);
+        res.status(500).json({
+            error: 'Failed to fetch lesson',
+            message: err.message
+        });
+    }
+});
+
 // GET /search - Search lessons by subject or location
 app.get('/search', async (req, res) => {
     try {
