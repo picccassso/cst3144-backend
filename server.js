@@ -115,6 +115,37 @@ app.get('/lessons', async (req, res) => {
     }
 });
 
+// GET /lessons/:id - Return a single lesson by ID
+app.get('/lessons/:id', async (req, res) => {
+    try {
+        const lessonId = req.params.id;
+
+        if (!ObjectId.isValid(lessonId)) {
+            return res.status(400).json({
+                error: 'Invalid lesson ID',
+                message: 'The provided lesson ID is not valid'
+            });
+        }
+
+        const lesson = await db.collection('lessons').findOne({ _id: new ObjectId(lessonId) });
+
+        if (!lesson) {
+            return res.status(404).json({
+                error: 'Lesson not found',
+                message: `No lesson found with ID: ${lessonId}`
+            });
+        }
+
+        res.json(lesson);
+    } catch (err) {
+        console.error('Error fetching lesson:', err);
+        res.status(500).json({
+            error: 'Failed to fetch lesson',
+            message: err.message
+        });
+    }
+});
+
 // GET /search - Search lessons by subject or location
 app.get('/search', async (req, res) => {
     try {
@@ -158,17 +189,10 @@ app.get('/stats', async (req, res) => {
             });
         }
 
-        // Extract unique subjects
         const subjects = [...new Set(lessons.map(l => l.subject))];
-
-        // Extract unique locations
         const locations = [...new Set(lessons.map(l => l.location))];
-
-        // Calculate average price
         const totalPrice = lessons.reduce((sum, l) => sum + l.price, 0);
         const averagePrice = Math.round((totalPrice / lessons.length) * 100) / 100;
-
-        // Calculate total spaces
         const totalSpaces = lessons.reduce((sum, l) => sum + l.spaces, 0);
 
         res.json({
@@ -182,6 +206,20 @@ app.get('/stats', async (req, res) => {
         console.error('Error fetching statistics:', err);
         res.status(500).json({
             error: 'Failed to fetch statistics',
+            message: err.message
+        });
+    }
+});
+
+// GET /orders - Return all orders
+app.get('/orders', async (req, res) => {
+    try {
+        const orders = await db.collection('orders').find({}).toArray();
+        res.json(orders);
+    } catch (err) {
+        console.error('Error fetching orders:', err);
+        res.status(500).json({
+            error: 'Failed to fetch orders',
             message: err.message
         });
     }
